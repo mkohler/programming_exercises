@@ -31,7 +31,7 @@ class Node(object):
 
         values = [ x.calculate() for x in self.children ]
 
-        return reduce(operator.add, values)
+        return reduce(self.operator_dict[self.symbol], values)
 
 #        for node in nodes:
 #            if node is a number:
@@ -67,11 +67,27 @@ class Tests(unittest.TestCase):
         root.add_node(2.3)
         root.add_node(2.3)
 
-    def test_calc(self):
+
+class TestCalculate(unittest.TestCase):
+    def test_calc_add_basic(self):
         root = Node('+')
         root.add_node(1)
         root.add_node(1)
         self.assertEqual(root.calculate(), 2)
+
+    def test_calc_add_basic(self):
+        root = Node('+')
+        root.add_node(1)
+        root.add_node(1)
+        root.add_node(1)
+        self.assertEqual(root.calculate(), 3)
+
+    def test_calc_sub_basic(self):
+        root = Node('-')
+        root.add_node(5.0)
+        root.add_node(0.5)
+        self.assertEqual(root.calculate(), 4.5)
+
 
 if __name__ == '__main__':
     unittest.main()
