@@ -78,6 +78,8 @@ class OblongNumberSpiral(object):
             self.matrix.set_value(x, y, count)
             count += 1
 
+            print self.matrix.matrix
+
             # Then move on 
             x, y = self.next_coordinate(x, y)
 
@@ -136,7 +138,10 @@ class TestMatrix(unittest.TestCase):
 class TestSpiral(unittest.TestCase):
 
     def test_spiral(self):
-        o = OblongNumberSpiral(4, 3)
+#        o = OblongNumberSpiral(4, 3)
+#        o.make_spiral()
+
+        o = OblongNumberSpiral(6, 5)
         o.make_spiral()
 
 if __name__ == '__main__':
