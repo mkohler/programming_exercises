@@ -1,14 +1,28 @@
-#!/usr/bin/env python2.6
+"""Rackspace Test, Problem 1
+You are given a tree representing a basic mathematical expression, where the
+number of children extending from any node is >= 2. Each of the leaves is a
+real number and each node represents a mathematical operator from the set(+,
+-, *, /) that is to be applied to all of the leaves of that node.
+Additionally, all operations should be evaluated left-to-right, so if you have
+a subtraction node with 1, 2 and 3 you would evaluate as 1 - 2 - 3 = -4. Write
+a method that calculates the value of such a tree.
+
+signature: value = calculate(node root node)
+
+Tested with Python 2.6.
+"""
+
 from __future__ import division
 import operator
 import unittest
 
 
-class NotAnOperatorError(ValueError):
-    pass
-
-
 class Node(object):
+    """Define a minimal node class to support the calculate method.
+
+    To keep it brief, do not validate tree creation methods.
+    """
+
     operator_dict = {'+': operator.add,
                      '-': operator.sub,
                      '*': operator.mul,
@@ -19,18 +33,21 @@ class Node(object):
         self.children = []
 
     def add_node(self, symbol):
+        """Return a newly-created child node with the specified symbol."""
         child_node = Node(symbol)
         self.children.append(child_node)
         return child_node
 
     def add_nodes(self, symbol_list):
+        """Return a list of child nodes corresponding to the symbol list."""
         return [self.add_node(s) for s in symbol_list]
 
     def calculate(self):
+        """Recursively calculate value of the expression tree."""
         if not self.children:
             return self.symbol
 
-        values = [x.calculate() for x in self.children]
+        values = (x.calculate() for x in self.children)
 
         return reduce(self.operator_dict[self.symbol], values)
 
@@ -65,6 +82,11 @@ class TestCalculate(unittest.TestCase):
         add_children[1].add_nodes((200, 20, 2))
         add_children[2].add_nodes((300, 30, 3))
         self.assertEqual(root.calculate(), 537)
+
+    def test_calc_wide_tree(self):
+        root = Node('+')
+        root.add_nodes(xrange(10000))
+        self.assertEqual(root.calculate(), sum(xrange(10000)))
 
 
 if __name__ == '__main__':
