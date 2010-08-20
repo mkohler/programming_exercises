@@ -108,9 +108,8 @@ class OblongNumberSpiral(object):
         self.width = width
         self.matrix = Matrix(height, width)
 
-
+        # Spirals always start going east (to the right).
         self.go_forward = go_east
-
         self.make_spiral()
 
     def make_spiral(self):
@@ -130,22 +129,27 @@ class OblongNumberSpiral(object):
                 return
 
     def next_coordinate(self, x, y):
+        """Encapsulate finding the next location in the spiral.
 
-
+        When we reach a non-empty or out-of-bounds coordinate, we
+        turn 90 degrees clockwise and go that way. And if that way
+        is non-empty, we know the spiral is finished.
+        """
+        # This is a state_transition diagram.
         turn_clockwise = {go_east: go_south,
                           go_south: go_west,
                           go_west: go_north,
                           go_north: go_east}
 
-        # Try moving forward
+        # Try moving forward.
         new_x, new_y = self.go_forward(x, y)
 
-        # Check if this is vacant.
+        # Check if this space is vacant.
         if self.matrix.is_vacant(new_x, new_y):
             return new_x, new_y
 
-        # If it's not change directions, and move forward.
-        # It this space isn't vacant, give up, we're done.
+        # If it's not, change directions, and move forward.
+        # It the new space isn't vacant, give up, we're done.
         self.go_forward = turn_clockwise[self.go_forward]
         new_x, new_y = self.go_forward(x, y)
 
@@ -204,8 +208,7 @@ class TestSpiral(unittest.TestCase):
                     "10 11  4\n"
                     " 9 12  5\n"
                     " 8  7  6")
-        o = OblongNumberSpiral(4, 3)
-        self.assertEqual('%s' % o, solution)
+        self.assertEqual(solution, '%s' % OblongNumberSpiral(4, 3))
 
     def test_example2(self):
         solution = (" 1  2  3  4  5\n"
@@ -214,8 +217,8 @@ class TestSpiral(unittest.TestCase):
                     "16 27 30 23  8\n"
                     "15 26 25 24  9\n"
                     "14 13 12 11 10")
-        o = OblongNumberSpiral(6, 5)
-        self.assertEqual('%s' % o, solution)
+        self.assertEqual(solution, '%s' % OblongNumberSpiral(6, 5))
+
 
 if __name__ == '__main__':
     sys.exit(main())
