@@ -7,8 +7,6 @@ import operator
 import unittest
 
 
-
-
 def coin_value(coin_types, coin_quantities):
     """Calculate total value in cents of all coins.
 
@@ -24,9 +22,9 @@ def num_usable(coin_type, coin_quantity, price_in_cents):
 
 
 def adjust_coin_quantities(c_types, c_quantities, price_in_cents):
-
+    """Reduce the coin_quantity list down to what's feasible."""
     adjusted_quantities = []
-    for i, coin_type in enumerate(coin_types):
+    for i, coin_type in enumerate(c_types):
         quantity = num_usable(c_types[i], c_quantities[i], price_in_cents)
         adjusted_quantities.append(quantity)
     return adjusted_quantities
@@ -51,11 +49,6 @@ def change(coin_types, coin_quantities, price):
 
 
 
-
-
-
-
-
 class TestCase(unittest.TestCase):
     def test_coin_value(self):
         self.assertEqual(coin_value((1,5,100), (3, 2, 4)), 413)
@@ -64,6 +57,14 @@ class TestCase(unittest.TestCase):
     # 10 dimes.
     def test_num_usable(self):
         self.assertEqual(10, num_usable(10, 109, 100))
+
+    def test_adjust_coin_quantities(self):
+        types = (1, 5, 10)
+        quantities = (1000, 1000, 1000)
+        price = 100
+        expected = [100, 20, 10]
+        self.assertEqual(expected,
+                         adjust_coin_quantities(types, quantities, price))
 
     def test_crange(self):
         self.assertEqual([0,1,2,3], list(crange(3)))
