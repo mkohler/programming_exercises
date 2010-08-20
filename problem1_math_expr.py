@@ -1,5 +1,5 @@
 # Copyright (c) 2010 Mark Kohler
-"""Rackspace Test, Problem 1, Mathematical Expression Tree
+"""Rackspace Test, Problem 1, Mathematical Expression Tree.
 
 You are given a tree representing a basic mathematical expression, where the
 number of children extending from any node is >= 2. Each of the leaves is a
