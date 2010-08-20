@@ -14,13 +14,14 @@ import optparse
 import sys
 import unittest
 
+
 def main():
     usage = '%prog [options] HEIGHT WIDTH'
     parser = optparse.OptionParser(usage,
                                    description=__doc__)
     parser.add_option('-t', '--test', action='store_true', default=False,
                       help='''Test this program''')
-    (options,args) = parser.parse_args()
+    (options, args) = parser.parse_args()
 
     if options.test:
         # Remove the options flag and run the tests.
@@ -39,18 +40,24 @@ def main():
     oblong_number_spiral_funball(height, width)
 
 
-# We want something that will be a multidimenionsal blah blah
-# Coordinates of a Matrix(2, 3)
-# 0,0 0,1, 0,2 0,3
-# 1,0 1,1, 1,2 1,3
+def oblong_number_spiral_funball(height, width):
+    print OblongNumberSpiral(height, width)
 
 
 class Matrix(object):
+    """Build and store a two-dimensional matrix of values.
+
+    The coordinates are (horizontal, vertical) and the origin is in the upper
+    left corner.  For example, the coordinates of Matrix(2, 4) would be
+    0,0  0,1, 0,2  0,3
+    1,0  1,1, 1,2  1,3
+    """
 
     def __init__(self, height, width):
         self.matrix = [[None] * width for row in range(height)]
 
     def is_vacant(self, x, y):
+        """Return true if the coordinate is valid and empty."""
         if x < 0 or y < 0:
             return False
 
@@ -68,28 +75,27 @@ class Matrix(object):
     def set_value(self, x, y, value):
         self.matrix[y][x] = value
 
-"""
-Coordinate System
 
-origin is in the top left corner.
-
-north and south are backward.
-"""
+# go_xxx routines
+#
+# These simple routines define what going forward in a particular direction
+# means in our coordinate system.  The origin is in the top left
+# corner. That's why north and south seem backward.
 
 def go_east(x, y):
     return x + 1, y
 
+
 def go_west(x, y):
     return x - 1, y
+
 
 def go_south(x, y):
     return x, y + 1
 
+
 def go_north(x, y):
     return x, y - 1
-
-def oblong_number_spiral_funball(height, width):
-    print OblongNumberSpiral(height, width)
 
 
 class OblongNumberSpiral(object):
