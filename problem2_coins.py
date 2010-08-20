@@ -24,6 +24,7 @@ import optparse
 import sys
 import unittest
 
+
 def main():
     usage = (
     '''%prog [-h|-t] TYPES AMOUNTS PRICE\n\n''' +
@@ -70,9 +71,9 @@ def how_much_change_do_i_use(coin_types_float, coin_quantities,
                                                 coin_quantities,
                                                 price_in_cents)
 
-    matches  = change(coin_types, reduced_quantities, price_in_cents)
+    matches = change(coin_types, reduced_quantities, price_in_cents)
 
-    num_coins = [ sum(match) for match in matches ]
+    num_coins = [sum(match) for match in matches]
 
     if len(num_coins) == 0:
         return None
