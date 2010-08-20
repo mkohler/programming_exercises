@@ -7,6 +7,15 @@ import operator
 import unittest
 
 
+def how_much_change_do_i_use(coin_types_float, coin_quantities,
+        price_of_shiny):
+
+    coin_types = coin_types_in_pennies(coin_types_float)
+
+def coin_types_in_pennies(coin_types_floats):
+    return [int(c_type * 100) for c_type in coin_types_floats]
+
+
 def coin_value(coin_types, coin_quantities):
     """Calculate total value in cents of all coins.
 
@@ -38,7 +47,7 @@ def crange(coins):
 def change(coin_types, coin_quantities, price):
     int_price = int(price * 100)
 
-    coin_choices = [ c + 1 for c in coin_quantities ]
+    coin_choices = [c + 1 for c in coin_quantities]
 
     for comb in itertools.product(*itertools.imap(crange, coin_choices)):
 #        print comb
@@ -48,10 +57,15 @@ def change(coin_types, coin_quantities, price):
             # print '\t\t%s, %s, %s' % comb
 
 
-
 class TestCase(unittest.TestCase):
+
     def test_coin_value(self):
-        self.assertEqual(coin_value((1,5,100), (3, 2, 4)), 413)
+        self.assertEqual(coin_value((1, 5, 100), (3, 2, 4)), 413)
+
+    def test_coin_types_in_pennies(self):
+        orig = [0.01, 0.03, 1.23]
+        expected = [1, 3, 123]
+        self.assertEqual(expected, coin_types_in_pennies(orig))
 
     # If you have 100 dimes and shiny costs a dollar, you can't use more than
     # 10 dimes.
@@ -67,12 +81,11 @@ class TestCase(unittest.TestCase):
                          adjust_coin_quantities(types, quantities, price))
 
     def test_crange(self):
-        self.assertEqual([0,1,2,3], list(crange(3)))
+        self.assertEqual([0, 1, 2, 3], list(crange(3)))
 
     def test_change(self):
         coin_types = (1, 5, 10)
         change(coin_types, (5, 5, 5), .25)
-
 
 
 if __name__ == '__main__':
