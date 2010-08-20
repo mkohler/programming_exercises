@@ -1,5 +1,6 @@
+#! /usr/bin/env python2.6
 # Copyright (c) 2010 Mark Kohler
-"""Rackspace Test, Problem 4, Number Spirals
+"""Rackspace Test, Problem 4, Number Spirals.
 
 You are to write an application that creates number spirals.
 
@@ -17,7 +18,8 @@ def main():
     usage = '%prog [options] HEIGHT WIDTH'
     parser = optparse.OptionParser(usage,
                                    description=__doc__)
-    parser.add_option('-t', '--test', action='store_true', default=False)
+    parser.add_option('-t', '--test', action='store_true', default=False,
+                      help='''Test this program''')
     (options,args) = parser.parse_args()
 
     if options.test:
@@ -25,6 +27,16 @@ def main():
         sys.argv = sys.argv[0:1]
         unittest.main()
 
+    if len(args) < 2:
+        parser.error('''specify HEIGHT and WIDTH of spiral''')
+
+    try:
+        height = int(args[0])
+        width = int(args[1])
+    except ValueError:
+        parser.error('''HEIGHT and WIDTH must be integers''')
+
+    oblong_number_spiral_funball(height, width)
 
 
 # We want something that will be a multidimenionsal blah blah
@@ -75,6 +87,9 @@ def go_south(x, y):
 
 def go_north(x, y):
     return x, y - 1
+
+def oblong_number_spiral_funball(height, width):
+    print OblongNumberSpiral(height, width)
 
 
 class OblongNumberSpiral(object):
