@@ -16,7 +16,7 @@ import unittest
 
 
 def main():
-    usage = '%prog [options] HEIGHT WIDTH'
+    usage = '%prog [-t] HEIGHT WIDTH'
     parser = optparse.OptionParser(usage,
                                    description=__doc__)
     parser.add_option('-t', '--test', action='store_true', default=False,
@@ -26,7 +26,7 @@ def main():
     if options.test:
         # Remove the options flag and run the tests.
         sys.argv = sys.argv[0:1]
-        unittest.main()
+        return unittest.main()
 
     if len(args) < 2:
         parser.error('''specify HEIGHT and WIDTH of spiral''')
@@ -222,4 +222,3 @@ class TestSpiral(unittest.TestCase):
 
 if __name__ == '__main__':
     sys.exit(main())
-    unittest.main()

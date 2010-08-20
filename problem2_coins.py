@@ -1,10 +1,63 @@
+#! /usr/bin/env python2.6
 # Copyright (c) 2010 Mark Kohler
+"""Rackspace Test, Problem 2, Coins.
 
+You are given an array of floating point values representing American currency,
+an- other array representing the quantity of each coin in your possession and a
+dollar amount.  The values of the coins aren't necessarily standard
+denominations. However, you may assume the array of coin values are sorted in
+ascending order, and that all coins consist of at most two decimal places.
+Additionally you may assume that the price will never exceed 10 dollars.  Write
+a method to determine the smallest number of coins that can represent the
+dollar amount.
+
+signature: coins array = how much change do i use(array coin types,
+    array coin quantities, float price of shiny)
+
+Tested with Python 2.6.
+"""
 
 from __future__ import division
 import itertools
 import operator
+import optparse
+import sys
 import unittest
+
+def main():
+    usage = (
+    '''%prog [-t] TYPES AMOUNTS PRICE\n\n''' +
+    '''      TYPES        value1,value2,...\n''' +
+    '''      QUANTITIES   quantity1,quantity2,...\n''' +
+    '''      PRICES       dd.cc\n\n''' +
+    '''Example: 10 each of pennies, nickels, and dimes, price $1.25\n''' +
+    '''         %prog 0.01,0.05,0.10 10,10,10 1.25''')
+    parser = optparse.OptionParser(usage,
+                                   description=__doc__)
+    parser.add_option('-t', '--test', action='store_true', default=False,
+                      help='''Test this program''')
+    (options, args) = parser.parse_args()
+
+    if options.test:
+        # Remove the options flag and run the tests.
+        sys.argv = sys.argv[0:1]
+        return unittest.main()
+
+    if len(args) < 3:
+        parser.error('missing parameters')
+
+    try:
+        coin_types = map(float, args[0].split(','))
+        coin_quantities = map(int, args[1].split(','))
+        price = float(args[2])
+    except ValueError:
+        parser.error('invalid parameters')
+
+    num_coins = how_much_change_do_i_use(coin_types, coin_quantities, price)
+    if num_coins == 0:
+        print 'The coins entered cannot sum to %s' % price
+    else:
+        print 'minimum coins: %s' % num_coins
 
 
 def how_much_change_do_i_use(coin_types_float, coin_quantities,
@@ -108,12 +161,4 @@ class TestCase(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
-
-
-
-
-
-# Optimization: Truncate quantities down to price/value.
-# i.e. if you have 100 dimes and shiny costs a dollar, you're
-# not going to use more than 10 dimes.
+    sys.exit(main())
