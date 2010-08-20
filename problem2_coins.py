@@ -11,11 +11,20 @@ def how_much_change_do_i_use(coin_types_float, coin_quantities,
         price_of_shiny):
 
     coin_types = coin_types_in_pennies(coin_types_float)
-    price_in_cents = int(price * 100)
+    price_in_cents = int(price_of_shiny * 100)
 
-    reduced_quantities = adjust_coin_quantites(coin_types,
-                                               coin_quantities,
-                                               price_in_cents)
+    reduced_quantities = adjust_coin_quantities(coin_types,
+                                                coin_quantities,
+                                                price_in_cents)
+
+    matches  = change(coin_types, reduced_quantities, price_in_cents)
+
+    num_coins = [ sum(match) for match in matches ]
+
+    if len(num_coins) == 0:
+        return None
+
+    return min(num_coins)
 
 
 def coin_types_in_pennies(coin_types_floats):
@@ -37,18 +46,12 @@ def num_usable(coin_type, coin_quantity, price_in_cents):
     return min(coin_quantity, price_in_cents // coin_type)
 
 
-
+# equivalent to nested for loops for each coin type.
 def change(coin_types, coin_quantities, price):
 
     combs = itertools.product(*itertools.imap(crange, coin_quantities))
 
-    matches = (c for c in combs if coin_value(coin_types, c) == price)
-
-    return matches
-
-#    for comb in itertools.product(*itertools.imap(crange, coin_quantities)):
-#        if coin_value(coin_types, comb) == int_price:
-#            matches.append(comb)
+    return (c for c in combs if coin_value(coin_types, c) == price)
 
 
 def crange(coins):
@@ -97,6 +100,11 @@ class TestCase(unittest.TestCase):
         self.assert_((5, 1, 0) in matches)
         self.assert_((0, 0, 1) in matches)
         self.assertEqual(2, len(matches))
+
+    def test_cant_make_change(self):
+        coin_types = (5, 10)
+        matches = list(change(coin_types, (5, 10), 3))
+        self.assertEqual(0, len(matches))
 
 
 if __name__ == '__main__':
