@@ -1,6 +1,30 @@
 # Copyright (c) 2010 Mark Kohler
+"""Rackspace Test, Problem 4, Number Spirals
 
+You are to write an application that creates number spirals.
+
+Write a method that accepts an integer width and height and generates a number
+spiral as above.  Note that the numbers are right-aligned and padded with
+spaces in columns which are as wide as the widest number in the spiral. Each
+column is then separated by a single space.
+"""
+
+import optparse
+import sys
 import unittest
+
+def main():
+    usage = '%prog [options] HEIGHT WIDTH'
+    parser = optparse.OptionParser(usage,
+                                   description=__doc__)
+    parser.add_option('-t', '--test', action='store_true', default=False)
+    (options,args) = parser.parse_args()
+
+    if options.test:
+        # Remove the options flag and run the tests.
+        sys.argv = sys.argv[0:1]
+        unittest.main()
+
 
 
 # We want something that will be a multidimenionsal blah blah
@@ -40,26 +64,17 @@ origin is in the top left corner.
 north and south are backward.
 """
 
-
 def go_east(x, y):
     return x + 1, y
-
 
 def go_west(x, y):
     return x - 1, y
 
-
 def go_south(x, y):
     return x, y + 1
 
-
 def go_north(x, y):
     return x, y - 1
-
-turn_clockwise = {go_east: go_south,
-                  go_south: go_west,
-                  go_west: go_north,
-                  go_north: go_east}
 
 
 class OblongNumberSpiral(object):
@@ -94,22 +109,29 @@ class OblongNumberSpiral(object):
                 return
 
     def next_coordinate(self, x, y):
-            # Try moving forward
-            new_x, new_y = self.go_forward(x, y)
 
-            # Check if this is vacant.
-            if self.matrix.is_vacant(new_x, new_y):
-                return new_x, new_y
 
-            # If it's not change directions, and move forward.
-            # It this space isn't vacant, give up, we're done.
-            self.go_forward = turn_clockwise[self.go_forward]
-            new_x, new_y = self.go_forward(x, y)
+        turn_clockwise = {go_east: go_south,
+                          go_south: go_west,
+                          go_west: go_north,
+                          go_north: go_east}
 
-            if self.matrix.is_vacant(new_x, new_y):
-                return new_x, new_y
+        # Try moving forward
+        new_x, new_y = self.go_forward(x, y)
 
-            raise self.NoVacanciesException((new_x, new_y))
+        # Check if this is vacant.
+        if self.matrix.is_vacant(new_x, new_y):
+            return new_x, new_y
+
+        # If it's not change directions, and move forward.
+        # It this space isn't vacant, give up, we're done.
+        self.go_forward = turn_clockwise[self.go_forward]
+        new_x, new_y = self.go_forward(x, y)
+
+        if self.matrix.is_vacant(new_x, new_y):
+            return new_x, new_y
+
+        raise self.NoVacanciesException((new_x, new_y))
 
     def __str__(self):
         number_width = len('%s' % (self.height * self.width))
@@ -175,5 +197,5 @@ class TestSpiral(unittest.TestCase):
         self.assertEqual('%s' % o, solution)
 
 if __name__ == '__main__':
-#    o = OblongNumberSpiral(4, 3)
+    sys.exit(main())
     unittest.main()
