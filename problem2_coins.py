@@ -11,23 +11,16 @@ def how_much_change_do_i_use(coin_types_float, coin_quantities,
         price_of_shiny):
 
     coin_types = coin_types_in_pennies(coin_types_float)
+    price_in_cents = int(price * 100)
+
+    reduced_quantities = adjust_coin_quantites(coin_types,
+                                               coin_quantities,
+                                               price_in_cents)
+
 
 def coin_types_in_pennies(coin_types_floats):
+    """Convert coin_types list from dollar-floats to penny-ints."""
     return [int(c_type * 100) for c_type in coin_types_floats]
-
-
-def coin_value(coin_types, coin_quantities):
-    """Calculate total value in cents of all coins.
-
-    coin_types is a list of coin denominations, in cents.
-    coin_quantities is a list of coin quantity in each denomination
-    """
-    return sum(itertools.imap(operator.mul, coin_types, coin_quantities))
-
-
-def num_usable(coin_type, coin_quantity, price_in_cents):
-    """Reduce the number of coins down to what could be used."""
-    return min(coin_quantity, price_in_cents // coin_type)
 
 
 def adjust_coin_quantities(c_types, c_quantities, price_in_cents):
@@ -39,22 +32,37 @@ def adjust_coin_quantities(c_types, c_quantities, price_in_cents):
     return adjusted_quantities
 
 
+def num_usable(coin_type, coin_quantity, price_in_cents):
+    """Reduce the number of coins down to what could be used."""
+    return min(coin_quantity, price_in_cents // coin_type)
+
+
+
+def change(coin_types, coin_quantities, price):
+
+    combs = itertools.product(*itertools.imap(crange, coin_quantities))
+
+    matches = (c for c in combs if coin_value(coin_types, c) == price)
+
+    return matches
+
+#    for comb in itertools.product(*itertools.imap(crange, coin_quantities)):
+#        if coin_value(coin_types, comb) == int_price:
+#            matches.append(comb)
+
+
 def crange(coins):
     """Like xrange, but goes one higher to include the number itself."""
     return xrange(coins + 1)
 
 
-def change(coin_types, coin_quantities, price):
-    int_price = int(price * 100)
+def coin_value(coin_types, coin_quantities):
+    """Calculate total value in cents of all coins.
 
-    coin_choices = [c + 1 for c in coin_quantities]
-
-    for comb in itertools.product(*itertools.imap(crange, coin_choices)):
-#        print comb
-        #print coin_value(coin_types, comb)
-        if coin_value(coin_types, comb) == int_price:
-            pass
-            # print '\t\t%s, %s, %s' % comb
+    coin_types is a list of coin denominations, in cents.
+    coin_quantities is a list of coin quantity in each denomination
+    """
+    return sum(itertools.imap(operator.mul, coin_types, coin_quantities))
 
 
 class TestCase(unittest.TestCase):
@@ -85,7 +93,10 @@ class TestCase(unittest.TestCase):
 
     def test_change(self):
         coin_types = (1, 5, 10)
-        change(coin_types, (5, 5, 5), .25)
+        matches = list(change(coin_types, (5, 1, 1), 10))
+        self.assert_((5, 1, 0) in matches)
+        self.assert_((0, 0, 1) in matches)
+        self.assertEqual(2, len(matches))
 
 
 if __name__ == '__main__':
