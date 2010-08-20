@@ -3,7 +3,7 @@
 """Rackspace Test, Problem 2, Coins.
 
 You are given an array of floating point values representing American currency,
-an- other array representing the quantity of each coin in your possession and a
+another array representing the quantity of each coin in your possession and a
 dollar amount.  The values of the coins aren't necessarily standard
 denominations. However, you may assume the array of coin values are sorted in
 ascending order, and that all coins consist of at most two decimal places.
@@ -26,7 +26,7 @@ import unittest
 
 def main():
     usage = (
-    '''%prog [-t] TYPES AMOUNTS PRICE\n\n''' +
+    '''%prog [-h|-t] TYPES AMOUNTS PRICE\n\n''' +
     '''      TYPES        value1,value2,...\n''' +
     '''      QUANTITIES   quantity1,quantity2,...\n''' +
     '''      PRICES       dd.cc\n\n''' +
