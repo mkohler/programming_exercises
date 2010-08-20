@@ -63,6 +63,7 @@ def main():
 
 def how_much_change_do_i_use(coin_types_float, coin_quantities,
         price_of_shiny):
+    """Normalize inputs into integer amounts and massage output of change()."""
 
     coin_types = coin_types_in_pennies(coin_types_float)
     price_in_cents = int(price_of_shiny * 100)
@@ -73,6 +74,7 @@ def how_much_change_do_i_use(coin_types_float, coin_quantities,
 
     matches = change(coin_types, reduced_quantities, price_in_cents)
 
+    # Make a list of the number of coins in each solution.
     num_coins = [sum(match) for match in matches]
 
     if len(num_coins) == 0:
@@ -100,11 +102,16 @@ def num_usable(coin_type, coin_quantity, price_in_cents):
     return min(coin_quantity, price_in_cents // coin_type)
 
 
-# equivalent to nested for loops for each coin type.
-def change(coin_types, coin_quantities, price):
 
+def change(coin_types, coin_quantities, price):
+    """change implements a brute-force algorithm for making change."""
+
+    # combs (combinations) is a generator expression that generates
+    # every combination of coins.
     combs = itertools.product(*itertools.imap(crange, coin_quantities))
 
+    # Create another generator that runs through combs looking for
+    # combinations that add up to the specified price.
     return (c for c in combs if coin_value(coin_types, c) == price)
 
 
