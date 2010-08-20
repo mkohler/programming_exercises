@@ -149,7 +149,7 @@ class OblongNumberSpiral(object):
             return new_x, new_y
 
         # If it's not, change directions, and move forward.
-        # It the new space isn't vacant, give up, we're done.
+        # If the new space isn't vacant, give up, we're done.
         self.go_forward = turn_clockwise[self.go_forward]
         new_x, new_y = self.go_forward(x, y)
 
