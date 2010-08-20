@@ -76,7 +76,6 @@ class OblongNumberSpiral(object):
         self.go_forward = go_east
 
         self.make_spiral()
-        self.print_(height, width)
 
     def make_spiral(self):
         count = 1
@@ -112,15 +111,17 @@ class OblongNumberSpiral(object):
 
             raise self.NoVacanciesException((new_x, new_y))
 
-    def print_(self, height, width):
-        number_width = len('%s' % (height * width))
+    def __str__(self):
+        number_width = len('%s' % (self.height * self.width))
 
-        for row in range(height):
+        cols = []
+        for row in range(self.height):
             row_numbers = []
-            for col in range(width):
+            for col in range(self.width):
                 value = self.matrix.get_value(col, row)
                 row_numbers.append("%*s" % (number_width, value))
-            print ' '.join(row_numbers)
+            cols.append(' '.join(row_numbers))
+        return '\n'.join(cols)
 
 
 class TestMatrix(unittest.TestCase):
@@ -161,10 +162,15 @@ class TestSpiral(unittest.TestCase):
                     " 9 12 5"
                     " 8  7 6")
         o = OblongNumberSpiral(4, 3)
-        o.make_spiral()
-        o.print_()
+        print o
 
     def test_example2(self):
+        solution = (" 1  2  3  4  5"
+                    "18 19 20 21  6"
+                    "17 28 29 22  7"
+                    "16 27 30 23  8"
+                    "15 26 25 24  9"
+                    "14 13 12 11 10")
         o = OblongNumberSpiral(6, 5)
         o.make_spiral()
 
