@@ -157,22 +157,22 @@ class TestMatrix(unittest.TestCase):
 class TestSpiral(unittest.TestCase):
 
     def test_example1(self):
-        solution = (" 1  2 3"
-                    "10 11 4"
-                    " 9 12 5"
-                    " 8  7 6")
+        solution = (" 1  2  3\n"
+                    "10 11  4\n"
+                    " 9 12  5\n"
+                    " 8  7  6")
         o = OblongNumberSpiral(4, 3)
-        print o
+        self.assertEqual('%s' % o, solution)
 
     def test_example2(self):
-        solution = (" 1  2  3  4  5"
-                    "18 19 20 21  6"
-                    "17 28 29 22  7"
-                    "16 27 30 23  8"
-                    "15 26 25 24  9"
+        solution = (" 1  2  3  4  5\n"
+                    "18 19 20 21  6\n"
+                    "17 28 29 22  7\n"
+                    "16 27 30 23  8\n"
+                    "15 26 25 24  9\n"
                     "14 13 12 11 10")
         o = OblongNumberSpiral(6, 5)
-        o.make_spiral()
+        self.assertEqual('%s' % o, solution)
 
 if __name__ == '__main__':
 #    o = OblongNumberSpiral(4, 3)
