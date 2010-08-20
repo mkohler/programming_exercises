@@ -16,7 +16,7 @@ import unittest
 
 
 def main():
-    usage = '%prog [-t] HEIGHT WIDTH'
+    usage = '%prog [-h|-t] HEIGHT WIDTH'
     parser = optparse.OptionParser(usage,
                                    description=__doc__)
     parser.add_option('-t', '--test', action='store_true', default=False,
