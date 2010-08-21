@@ -46,7 +46,7 @@ def main():
     if solutions:
         print format_solutions(coin_types, solutions)
     else:
-        print 'The coins entered cannot represent %s.' % price
+        print 'The coins entered cannot represent %.2f.' % price
 
 def format_solutions(coin_types, solutions):
     output_lines = []
