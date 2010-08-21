@@ -48,18 +48,17 @@ def main():
     else:
         print 'The coins entered cannot represent %.2f.' % price
 
+
 def format_solutions(coin_types, solutions):
     output_lines = []
     for i, solution in enumerate(solutions, 1):
         line = []
         line.append('Solution %s:' % i)
-        for coin,quantity in zip(coin_types, solution):
+        for coin, quantity in zip(coin_types, solution):
             line.append(' %s: %s coin(s)' % (coin, quantity))
         output_lines.append(' '.join(line))
     return '\n'.join(output_lines)
 
-
-    return '\n'.join(output_lines)
 
 def how_much_change_do_i_use(coin_types_float, coin_quantities,
         price_of_shiny):
@@ -81,7 +80,7 @@ def how_much_change_do_i_use(coin_types_float, coin_quantities,
     # First we'll run through all of the coin combinations to find the
     # minimum number of coins, returning None if there were no solutions.
     try:
-        min_coins = min( (sum(match) for match in min_coins_gen) )
+        min_coins = min((sum(match) for match in min_coins_gen))
     except ValueError:
         return None
 
