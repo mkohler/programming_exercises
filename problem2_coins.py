@@ -158,19 +158,19 @@ class TestCase(unittest.TestCase):
         self.assert_((0, 0, 1) in matches)
         self.assertEqual(2, len(matches))
 
-    def test_cant_make_change(self):
+    def test_change_fails(self):
         coin_types = (5, 10)
         matches = list(change(coin_types, (5, 10), 3))
         self.assertEqual(0, len(matches))
 
-    def test_how_much_change_do_i_use(self):
+    def test_how_much_normal_case(self):
         types = [0.01, 0.05, 0.10]
         quantities = [5, 5, 50]
         price = 0.63
         answers = how_much_change_do_i_use(types, quantities, price)
         self.assertEqual([(3, 0, 6)], answers)
 
-    def test_non_unique_solutions(self):
+    def test_how_much_non_unique_solutions(self):
         types = [0.01, 0.10, 0.28]
         quantities = [5, 5, 5]
         price = 0.30
