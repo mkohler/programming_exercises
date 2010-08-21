@@ -36,8 +36,8 @@ def main():
         parser.error('missing parameters')
 
     try:
-        coin_types = map(float, args[0].split(','))
-        coin_quantities = map(int, args[1].split(','))
+        coin_types = [float(t) for t in args[0].split(',')]
+        coin_quantities = [float(q) for q in args[1].split(',')]
         price = float(args[2])
     except ValueError:
         parser.error('invalid parameters')
@@ -165,7 +165,7 @@ class TestCase(unittest.TestCase):
         quantities = [5, 5, 50]
         price = 0.63
         answers = how_much_change_do_i_use(types, quantities, price)
-        self.assertEqual([(3,0,6)], answers)
+        self.assertEqual([(3, 0, 6)], answers)
 
     def test_non_unique_solutions(self):
         types = [0.01, 0.10, 0.28]
