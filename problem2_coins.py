@@ -60,15 +60,21 @@ def how_much_change_do_i_use(coin_types_float, coin_quantities,
                                                 coin_quantities,
                                                 price_in_cents)
 
-    matches = change(coin_types, reduced_quantities, price_in_cents)
+    matches_gen = change(coin_types, reduced_quantities, price_in_cents)
 
-    # Make a list of the number of coins in each solution.
-    num_coins = [sum(match) for match in matches]
+    # Make a copy of the generator because we're going to do two passes over
+    # the list of matches.
+    matches_gen, min_coins_gen = itertools.tee(matches_gen)
 
-    if len(num_coins) == 0:
-        return None
+    # First we'll run through all of the coin combinations to find the
+    # minimum number of coins.
+    min_coins = min( (sum(match) for match in min_coins_gen) )
 
-    return min(num_coins)
+    # Second, we'll create a filter for that number of coins. There may
+    # be multiple solutions that use the same number of coins.
+    min_coin_gen = (m for m in matches_gen if sum(m) == min_coins)
+
+    return list(min_coin_gen)
 
 
 def coin_types_in_pennies(coin_types_floats):
@@ -153,6 +159,22 @@ class TestCase(unittest.TestCase):
         coin_types = (5, 10)
         matches = list(change(coin_types, (5, 10), 3))
         self.assertEqual(0, len(matches))
+
+    def test_how_much_change_do_i_use(self):
+        types = [0.01, 0.05, 0.10]
+        quantities = [5, 5, 50]
+        price = 0.63
+#        import pdb; pdb.set_trace()
+        answers = how_much_change_do_i_use(types, quantities, price)
+        print "answers", answers
+
+    def test_non_unique_solutions(self):
+        types = [0.01, 0.10, 0.28]
+        quantities = [5, 5, 5]
+        price = 0.30
+#        import pdb; pdb.set_trace()
+        answers = how_much_change_do_i_use(types, quantities, price)
+        print "answers2", answers
 
 
 if __name__ == '__main__':
