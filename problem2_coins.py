@@ -164,17 +164,17 @@ class TestCase(unittest.TestCase):
         types = [0.01, 0.05, 0.10]
         quantities = [5, 5, 50]
         price = 0.63
-#        import pdb; pdb.set_trace()
         answers = how_much_change_do_i_use(types, quantities, price)
-        print "answers", answers
+        self.assertEqual([(3,0,6)], answers)
 
     def test_non_unique_solutions(self):
         types = [0.01, 0.10, 0.28]
         quantities = [5, 5, 5]
         price = 0.30
-#        import pdb; pdb.set_trace()
         answers = how_much_change_do_i_use(types, quantities, price)
-        print "answers2", answers
+        self.assertEqual(2, len(answers))
+        self.assert_((0, 3, 0) in answers)
+        self.assert_((2, 0, 1) in answers)
 
 
 if __name__ == '__main__':
