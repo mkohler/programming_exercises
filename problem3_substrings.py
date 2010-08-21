@@ -41,28 +41,37 @@ def longest_substring(s1, s2):
 
     for v_char in v_str:
         for i, h_char in enumerate(h_str):
-            print 'v_char: %s, h_char %s' % (v_char, h_char)
+            #print 'v_char: %s, h_char %s' % (v_char, h_char)
             if h_char == v_char:
                 common_str_len = prev_row[i-1] + 1
                 row[i] = common_str_len
-                print "common: %s" % h_str[i-common_str_len+1:i+1]
+                common_substr =  h_str[i-common_str_len+1:i+1]
+
                 if row[i] == max_length_seen:
-                    #longest_strings.add()
-                    pass
+                    longest_strings.add(common_substr)
                 elif row[i] >= max_length_seen:
                     max_length_seen = row[i]
-                    #longest_strings = set([])
+                    longest_strings = set([common_substr])
 
-                print 'row[%s]: %s' % (i, row[i])
+                #print 'row[%s]: %s' % (i, row[i])
         prev_row = row
         row = collections.defaultdict(int)
 
-
+    print longest_strings
 
 
 class TestCase(unittest.TestCase):
     def test_something(self):
         longest_substring('xydxyaa', 'abcdxyz')
+        longest_substring('aaaaaarackspacexxxxxx', 'abrackspacezzz')
+
+    def test_multiple_same_length(self):
+        longest_substring('xxx123yyyy456zzz', '789zzz012xxx345yyy')
+    def test_no_common_substrings(self):
+        longest_substring('123456', 'abcdef')
+    def test_empty_string(self):
+        longest_substring('rackspace', '')
+
 
 if __name__ == '__main__':
     unittest.main()
