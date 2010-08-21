@@ -2,12 +2,7 @@
 # Copyright (c) 2010 Mark Kohler
 """Rackspace Test, Problem 4, Number Spirals.
 
-You are to write an application that creates number spirals.
-
-Write a method that accepts an integer width and height and generates a number
-spiral as above.  Note that the numbers are right-aligned and padded with
-spaces in columns which are as wide as the widest number in the spiral. Each
-column is then separated by a single space.
+Tested with Python 2.6.
 """
 
 import optparse

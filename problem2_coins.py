@@ -2,18 +2,6 @@
 # Copyright (c) 2010 Mark Kohler
 """Rackspace Test, Problem 2, Coins.
 
-You are given an array of floating point values representing American currency,
-another array representing the quantity of each coin in your possession and a
-dollar amount.  The values of the coins aren't necessarily standard
-denominations. However, you may assume the array of coin values are sorted in
-ascending order, and that all coins consist of at most two decimal places.
-Additionally you may assume that the price will never exceed 10 dollars.  Write
-a method to determine the smallest number of coins that can represent the
-dollar amount.
-
-signature: coins array = how much change do i use(array coin types,
-    array coin quantities, float price of shiny)
-
 Tested with Python 2.6.
 """
 
