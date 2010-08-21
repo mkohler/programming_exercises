@@ -1,10 +1,68 @@
 
 Problem 1, Mathematical Expresssions
 
+The solution for this problem is in the calculate() method of the Node
+class. The class also has methods for creating the expression tree.
+
+There is not a command-line interface, but you can examine the tests
+to see how the calculate() method can be exercised.
+
+To run the tests:
+
+    $ python problem1_math_expr.py
+
+
+-----
 
 Problem 2, Coins
 
+The core algorithms for this solution are in the functions change() and
+how_much_change_do_i_use().
+
+change() uses brute force to find all of the ways the specified coins
+can be used to represent the price.
+
+how_much_change_do_i_use() filters the results of change() down to the 
+solutions with the smallest numbers of coins.
+
+There is a command-line interface. To see the help, and an example:
+
+    $ python problem2_coins.py -h
+
+To run the tests:
+
+    $ python problem2_coins.py -t
+
+
+-----
 
 Problem3, Substrings
 
+This solution does not have a command-line interface.
+
+The docstring in the module has notes about the implementation.
+
+To run the tests:
+
+    $ python problem3_substrings.py
+
+
+
+-----
+
 Problem4, Number Spirals
+
+There is a command-line interface for this program. To see the help:
+
+    $ python problem4_number_sprials.py -h
+
+
+To run the tests:
+
+    $ python problem4_number_spirals.py -t
+
+
+
+
+Mark Kohler
+mark.kohler@gmail.com
