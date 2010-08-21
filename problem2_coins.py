@@ -42,6 +42,9 @@ def main():
     except ValueError:
         parser.error('invalid parameters')
 
+    if len(coin_types) != len(coin_quantities):
+        parser.error('TYPES and AMOUNTS do not match.')
+
     solutions = how_much_change_do_i_use(coin_types, coin_quantities, price)
     if solutions:
         print format_solutions(coin_types, solutions)
@@ -55,7 +58,7 @@ def format_solutions(coin_types, solutions):
         line = []
         line.append('Solution %s:' % i)
         for coin, quantity in zip(coin_types, solution):
-            line.append(' %s: %s coin(s)' % (coin, quantity))
+            line.append(' %.2f: %s coin(s)' % (coin, quantity))
         output_lines.append(' '.join(line))
     return '\n'.join(output_lines)
 
