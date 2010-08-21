@@ -37,7 +37,7 @@ def main():
 
     try:
         coin_types = [float(t) for t in args[0].split(',')]
-        coin_quantities = [float(q) for q in args[1].split(',')]
+        coin_quantities = [int(q) for q in args[1].split(',')]
         price = float(args[2])
     except ValueError:
         parser.error('invalid parameters')
@@ -67,8 +67,11 @@ def how_much_change_do_i_use(coin_types_float, coin_quantities,
     matches_gen, min_coins_gen = itertools.tee(matches_gen)
 
     # First we'll run through all of the coin combinations to find the
-    # minimum number of coins.
-    min_coins = min( (sum(match) for match in min_coins_gen) )
+    # minimum number of coins, returning None if there were no solutions.
+    try:
+        min_coins = min( (sum(match) for match in min_coins_gen) )
+    except ValueError:
+        return None
 
     # Second, we'll create a filter for that number of coins. There may
     # be multiple solutions that use the same number of coins.
@@ -175,6 +178,13 @@ class TestCase(unittest.TestCase):
         self.assertEqual(2, len(answers))
         self.assert_((0, 3, 0) in answers)
         self.assert_((2, 0, 1) in answers)
+
+    def test_how_much_fails(self):
+        types = [0.01, 0.10, 0.28]
+        quantities = [1, 1, 1]
+        price = 0.30
+        answers = how_much_change_do_i_use(types, quantities, price)
+        self.assertEqual(None, answers)
 
 
 if __name__ == '__main__':
