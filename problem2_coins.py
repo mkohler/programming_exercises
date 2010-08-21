@@ -42,12 +42,24 @@ def main():
     except ValueError:
         parser.error('invalid parameters')
 
-    num_coins = how_much_change_do_i_use(coin_types, coin_quantities, price)
-    if num_coins:
-        print 'minimum coins: %s' % num_coins
+    solutions = how_much_change_do_i_use(coin_types, coin_quantities, price)
+    if solutions:
+        print format_solutions(coin_types, solutions)
     else:
-        print 'The coins entered cannot sum to %s' % price
+        print 'The coins entered cannot represent %s.' % price
 
+def format_solutions(coin_types, solutions):
+    output_lines = []
+    for i, solution in enumerate(solutions, 1):
+        line = []
+        line.append('Solution %s:' % i)
+        for coin,quantity in zip(coin_types, solution):
+            line.append(' %s: %s coin(s)' % (coin, quantity))
+        output_lines.append(' '.join(line))
+    return '\n'.join(output_lines)
+
+
+    return '\n'.join(output_lines)
 
 def how_much_change_do_i_use(coin_types_float, coin_quantities,
         price_of_shiny):
@@ -172,12 +184,13 @@ class TestCase(unittest.TestCase):
 
     def test_how_much_non_unique_solutions(self):
         types = [0.01, 0.10, 0.28]
-        quantities = [5, 5, 5]
-        price = 0.30
+        quantities = [10, 10, 10]
+        price = 0.60
         answers = how_much_change_do_i_use(types, quantities, price)
-        self.assertEqual(2, len(answers))
-        self.assert_((0, 3, 0) in answers)
-        self.assert_((2, 0, 1) in answers)
+        self.assertEqual(3, len(answers))
+        self.assert_((0, 6, 0) in answers)
+        self.assert_((2, 3, 1) in answers)
+        self.assert_((4, 0, 2) in answers)
 
     def test_how_much_fails(self):
         types = [0.01, 0.10, 0.28]
