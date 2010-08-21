@@ -43,10 +43,10 @@ def main():
         parser.error('invalid parameters')
 
     num_coins = how_much_change_do_i_use(coin_types, coin_quantities, price)
-    if num_coins == 0:
-        print 'The coins entered cannot sum to %s' % price
-    else:
+    if num_coins:
         print 'minimum coins: %s' % num_coins
+    else:
+        print 'The coins entered cannot sum to %s' % price
 
 
 def how_much_change_do_i_use(coin_types_float, coin_quantities,
@@ -88,7 +88,6 @@ def adjust_coin_quantities(c_types, c_quantities, price_in_cents):
 def num_usable(coin_type, coin_quantity, price_in_cents):
     """Reduce the number of coins down to what could be used."""
     return min(coin_quantity, price_in_cents // coin_type)
-
 
 
 def change(coin_types, coin_quantities, price):
