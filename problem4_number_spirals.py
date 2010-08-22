@@ -1,6 +1,6 @@
 #! /usr/bin/env python2.6
 # Copyright (c) 2010 Mark Kohler
-"""Rackspace Test, Problem 4, Number Spirals.
+"""Problem 4, Number Spirals.
 
 Tested with Python 2.6.
 """

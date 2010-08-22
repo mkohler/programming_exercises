@@ -1,5 +1,5 @@
 # Copyright (c) 2010 Mark Kohler
-"""Rackspace Test, Problem 1, Mathematical Expression Tree.
+"""Mathematical Expression Tree.
 
 Tested with Python 2.6.
 """
