@@ -15,7 +15,7 @@ import unittest
 
 def main():
     usage = (
-    '''%prog [-h|-t] TYPES AMOUNTS PRICE\n\n''' +
+    '''%prog [-h|-r|-t] TYPES AMOUNTS PRICE\n\n''' +
     '''      TYPES        value1,value2,...\n''' +
     '''      QUANTITIES   quantity1,quantity2,...\n''' +
     '''      PRICES       dd.cc\n\n''' +
@@ -23,6 +23,8 @@ def main():
     '''         %prog 0.01,0.05,0.10 10,10,10 1.25''')
     parser = optparse.OptionParser(usage,
                                    description=__doc__)
+    parser.add_option('-r', '--recursive', action='store_true', default=False,
+                      help='''Use recursive algorithm''')
     parser.add_option('-t', '--test', action='store_true', default=False,
                       help='''Test this program''')
     (options, args) = parser.parse_args()
@@ -45,7 +47,8 @@ def main():
     if len(coin_types) != len(coin_quantities):
         parser.error('TYPES and AMOUNTS do not match.')
 
-    solutions = how_much_change_do_i_use(coin_types, coin_quantities, price)
+    solutions = how_much_change_do_i_use(coin_types, coin_quantities, price,
+                                         options.recursive)
     if solutions:
         print format_solutions(coin_types, solutions)
     else:
@@ -64,7 +67,7 @@ def format_solutions(coin_types, solutions):
 
 
 def how_much_change_do_i_use(coin_types_float, coin_quantities,
-        price_of_shiny):
+        price_of_shiny, recursive=False):
     """Normalize inputs into integer amounts and massage output of change()."""
 
     coin_types = coin_types_in_pennies(coin_types_float)
@@ -74,7 +77,10 @@ def how_much_change_do_i_use(coin_types_float, coin_quantities,
                                                 coin_quantities,
                                                 price_in_cents)
 
-    matches_gen = change(coin_types, reduced_quantities, price_in_cents)
+    if recursive:
+        matches_gen = change_r(coin_types, reduced_quantities, price_in_cents)
+    else:
+        matches_gen = change(coin_types, reduced_quantities, price_in_cents)
 
     # Make a copy of the generator because we're going to do two passes over
     # the list of matches.
