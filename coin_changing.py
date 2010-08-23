@@ -155,13 +155,15 @@ def _change_r(ctypes, avail, price_in_cents, used, coin_index, results):
     # Take the first type of coin in the array.
     # For every possible quanity of this coin, call change().
     for n_coins_of_this_type in range(avail[coin_index] + 1):
-        used_r = [0] * len(ctypes)
+        # There has to be a better way. I want an expression that will
+        # add n_coins_of_this_type to the used[coin_index] and return
+        # the modified version of used.
+        used_r = used[:]
         used_r[coin_index] = n_coins_of_this_type
-        used_sum = [x+y for x,y in zip(used, used_r)]
         _change_r(ctypes,
                   avail,
                   price_in_cents,
-                  used_sum,
+                  used_r,
                   coin_index + 1,
                   results)
 
