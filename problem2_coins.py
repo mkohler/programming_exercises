@@ -124,6 +124,34 @@ def change(coin_types, coin_quantities, price):
     # combinations that add up to the specified price.
     return (c for c in combs if coin_value(coin_types, c) == price)
 
+def change_r(ctypes, avail, used, price_in_cents, coin_index=0):
+    """Recursive variant of change routine.
+
+    For each type of coin, there is a level of recursion.
+    """
+    value = coin_value(ctypes, used)
+    if value == price_in_cents:
+        return used
+    if value > price_in_cents or coin_index >= len(ctypes):
+        return None
+
+    # Take the first type of coin in the array.
+    # For every possible quanity of this coin, call change().
+    results = []
+    for n_coins_of_this_type in range(avail[coin_index] + 1):
+        used_r = [ 0 * len(ctypes) ]
+        used_r[coin_index] = n_coins_of_this_type
+        used_sum = [x+y for x,y in zip(used, used_r)]
+        result = change_r(ctypes,
+                          avail,
+                          used_sum,
+                          price_in_cents,
+                          coin_index + 1)
+        if result:
+            results.append(result)
+
+    return results
+
 
 def crange(coins):
     """Like xrange, but goes one higher to include the number itself."""
@@ -200,6 +228,47 @@ class TestCase(unittest.TestCase):
         price = 0.30
         answers = how_much_change_do_i_use(types, quantities, price)
         self.assertEqual(None, answers)
+
+class ChangeRecursive(unittest.TestCase):
+
+    def test_null_case(self):
+        self.assertEqual([0],
+                         change_r(ctypes=[1],
+                                  avail=[1],
+                                  used=[0],
+                                  price_in_cents=0))
+
+    def test_penny(self):
+        self.assertEqual([[1]],
+                         change_r(ctypes=[1],
+                                  avail=[1],
+                                  used=[0],
+                                  price_in_cents=1))
+
+    def xtest_change_r_out_of_coins(self):
+        self.assertEqual(None,
+                         change_r([1, 5], [0, 0], [5, 13], 100))
+
+    def xtest_change_r_spent_too_much(self):
+        self.assertEqual(None,
+                         change_r([1, 5], [2, 2], [5, 13], -25))
+
+    def xtest_change_r_exact_change(self):
+        self.assertEqual([5, 13],
+                         change_r([1, 05], [2, 2], [5, 13], 0))
+
+
+    # If there's only one kind of coin, no recursion is necessary.
+    def xtest_change_r_single_coin(self):
+        #import pdb; pdb.set_trace()
+        self.assertEqual([1], change_r([1], [2], [0], 1))
+
+
+
+    def xtest_change_r_simple_cases(self):
+        pass
+        #self.assertEqual([1], change_r([1], [2], [0], 1))
+
 
 
 if __name__ == '__main__':
