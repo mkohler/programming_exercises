@@ -141,7 +141,7 @@ def _change_r(ctypes, avail, price_in_cents, used, coin_index, results):
     """
     value = coin_value(ctypes, used)
     if value == price_in_cents:
-        results.append(used)
+        results.append(tuple(used))
         return
     if value > price_in_cents or coin_index >= len(ctypes):
         return
@@ -245,43 +245,28 @@ class ChangeRecursive(unittest.TestCase):
                                       price_in_cents=0))
 
     def test_pennies(self):
-        self.assertEqual([[1]], change_r([1], [5], 1))
-        self.assertEqual([[2]], change_r([1], [5], 2))
-        self.assertEqual([[3]], change_r([1], [5], 3))
+        self.assertEqual([(1,)], change_r([1], [5], 1))
+        self.assertEqual([(2,)], change_r([1], [5], 2))
+        self.assertEqual([(3,)], change_r([1], [5], 3))
 
     def test_nickels(self):
-        self.assertEqual([[1]], change_r([5], [5], 5))
-        self.assertEqual([[2]], change_r([5], [5], 10))
-        self.assertEqual([[3]], change_r([5], [5], 15))
+        self.assertEqual([(1,)], change_r([5], [5], 5))
+        self.assertEqual([(2,)], change_r([5], [5], 10))
+        self.assertEqual([(3,)], change_r([5], [5], 15))
 
     def test_two_coins_two_solutions(self):
-        self.assertEqual([[1, 1], [6, 0]],
+        self.assertEqual([(1, 1), (6, 0)],
                          change_r([1, 5], [10, 10], 6))
 
-    def xtest_change_r_out_of_coins(self):
-        self.assertEqual(None,
-                         change_r([1, 5], [0, 0], [5, 13], 100))
+    def test_change_r_out_of_coins(self):
+        self.assertEqual([], change_r([1, 5], [5, 5], 100))
 
-    def xtest_change_r_spent_too_much(self):
-        self.assertEqual(None,
-                         change_r([1, 5], [2, 2], [5, 13], -25))
-
-    def xtest_change_r_exact_change(self):
-        self.assertEqual([5, 13],
-                         change_r([1, 05], [2, 2], [5, 13], 0))
-
-
-    # If there's only one kind of coin, no recursion is necessary.
-    def xtest_change_r_single_coin(self):
-        #import pdb; pdb.set_trace()
-        self.assertEqual([1], change_r([1], [2], [0], 1))
-
-
-
-    def xtest_change_r_simple_cases(self):
-        pass
-        #self.assertEqual([1], change_r([1], [2], [0], 1))
-
+    def test_change_r_three_coins(self):
+        coin_types = (1, 5, 10)
+        matches = change_r(coin_types, (5, 1, 1), 10)
+        self.assertEqual(2, len(matches))
+        self.assert_((5, 1, 0) in matches)
+        self.assert_((0, 0, 1) in matches)
 
 
 if __name__ == '__main__':
