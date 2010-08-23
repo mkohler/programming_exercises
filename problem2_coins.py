@@ -124,34 +124,42 @@ def change(coin_types, coin_quantities, price):
     # combinations that add up to the specified price.
     return (c for c in combs if coin_value(coin_types, c) == price)
 
-def change_r(ctypes, avail, used, price_in_cents, coin_index=0):
+
+def change_r(ctypes, avail, price_in_cents):
+
+    if price_in_cents == 0:
+        return []
+    results = []
+    _change_r(ctypes, avail, price_in_cents, [0] * len(ctypes), 0, results)
+    return results
+
+
+def _change_r(ctypes, avail, price_in_cents, used, coin_index, results):
     """Recursive variant of change routine.
 
     For each type of coin, there is a level of recursion.
     """
     value = coin_value(ctypes, used)
     if value == price_in_cents:
-        return used
+        results.append(used)
+        return
     if value > price_in_cents or coin_index >= len(ctypes):
-        return None
+        return
 
     # Take the first type of coin in the array.
     # For every possible quanity of this coin, call change().
-    results = []
     for n_coins_of_this_type in range(avail[coin_index] + 1):
-        used_r = [ 0 * len(ctypes) ]
+        used_r = [0] * len(ctypes)
         used_r[coin_index] = n_coins_of_this_type
         used_sum = [x+y for x,y in zip(used, used_r)]
-        result = change_r(ctypes,
-                          avail,
-                          used_sum,
-                          price_in_cents,
-                          coin_index + 1)
-        if result:
-            results.append(result)
+        _change_r(ctypes,
+                  avail,
+                  price_in_cents,
+                  used_sum,
+                  coin_index + 1,
+                  results)
 
-    return results
-
+    return
 
 def crange(coins):
     """Like xrange, but goes one higher to include the number itself."""
@@ -232,18 +240,23 @@ class TestCase(unittest.TestCase):
 class ChangeRecursive(unittest.TestCase):
 
     def test_null_case(self):
-        self.assertEqual([0],
-                         change_r(ctypes=[1],
-                                  avail=[1],
-                                  used=[0],
-                                  price_in_cents=0))
+        self.assertEqual([], change_r(ctypes=[1],
+                                      avail=[1],
+                                      price_in_cents=0))
 
-    def test_penny(self):
-        self.assertEqual([[1]],
-                         change_r(ctypes=[1],
-                                  avail=[1],
-                                  used=[0],
-                                  price_in_cents=1))
+    def test_pennies(self):
+        self.assertEqual([[1]], change_r([1], [5], 1))
+        self.assertEqual([[2]], change_r([1], [5], 2))
+        self.assertEqual([[3]], change_r([1], [5], 3))
+
+    def test_nickels(self):
+        self.assertEqual([[1]], change_r([5], [5], 5))
+        self.assertEqual([[2]], change_r([5], [5], 10))
+        self.assertEqual([[3]], change_r([5], [5], 15))
+
+    def test_two_coins_two_solutions(self):
+        self.assertEqual([[1, 1], [6, 0]],
+                         change_r([1, 5], [10, 10], 6))
 
     def xtest_change_r_out_of_coins(self):
         self.assertEqual(None,
