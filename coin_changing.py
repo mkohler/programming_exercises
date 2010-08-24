@@ -281,5 +281,11 @@ class TestChange(unittest.TestCase):
         self.assertEqual(0, len(list(change(*input_args))))
         self.assertEqual(0, len(list(change_r(*input_args))))
 
+    def test_fails_with_greedy_algorithm(self):
+        input_args = ((4, 10, 25), (10, 10, 10), 41)
+        expected = [(4, 0, 1)]
+        self.assertEqual(expected, list(change(*input_args)))
+        self.assertEqual(expected, list(change_r(*input_args)))
+
 if __name__ == '__main__':
     sys.exit(main())
