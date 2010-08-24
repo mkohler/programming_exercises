@@ -213,18 +213,6 @@ class TestCase(unittest.TestCase):
     def test_crange(self):
         self.assertEqual([0, 1, 2, 3], list(crange(3)))
 
-    def test_change(self):
-        coin_types = (1, 5, 10)
-        matches = list(change(coin_types, (5, 1, 1), 10))
-        self.assert_((5, 1, 0) in matches)
-        self.assert_((0, 0, 1) in matches)
-        self.assertEqual(2, len(matches))
-
-    def test_change_fails(self):
-        coin_types = (5, 10)
-        matches = list(change(coin_types, (5, 10), 3))
-        self.assertEqual(0, len(matches))
-
     def test_how_much_normal_case(self):
         types = [0.01, 0.05, 0.10]
         quantities = [5, 5, 50]
@@ -248,6 +236,52 @@ class TestCase(unittest.TestCase):
         price = 0.30
         answers = how_much_change_do_i_use(types, quantities, price)
         self.assertEqual(None, answers)
+
+class Change(unittest.TestCase):
+    def test_null_case(self):
+        self.assertEqual([(0,)], list(change([1], [1], 0)))
+
+    def test_pennies(self):
+        self.assertEqual([(1,)], list(change([1], [5], 1)))
+        self.assertEqual([(2,)], list(change([1], [5], 2)))
+        self.assertEqual([(3,)], list(change([1], [5], 3)))
+
+    def test_nickels(self):
+        self.assertEqual([(1,)], list(change([5], [5], 5)))
+        self.assertEqual([(2,)], list(change([5], [5], 10)))
+        self.assertEqual([(3,)], list(change([5], [5], 15)))
+
+    def test_two_coins_two_solutions(self):
+        self.assertEqual([(1, 1), (6, 0)],
+                         list(change([1, 5], [10, 10], 6)))
+
+    def test_change_out_of_coins(self):
+        self.assertEqual([], list(change([1, 5], [5, 5], 100)))
+
+    def test_change_three_coins(self):
+        coin_types = (1, 5, 10)
+        matches = list(change(coin_types, (5, 1, 1), 10))
+        self.assertEqual(2, len(matches))
+        self.assert_((5, 1, 0) in matches)
+        self.assert_((0, 0, 1) in matches)
+
+    def test_change(self):
+        coin_types = (1, 5, 10)
+        matches = list(change(coin_types, (5, 1, 1), 10))
+        self.assert_((5, 1, 0) in matches)
+        self.assert_((0, 0, 1) in matches)
+        self.assertEqual(2, len(matches))
+
+    def test_no_nickels(self):
+        coin_types = (1, 10, 25)
+        matches = list(change(coin_types, (5, 5, 5), 30))
+        self.assert_((0, 3, 0) in matches)
+        self.assert_((5, 0, 1) in matches)
+
+    def test_change_fails(self):
+        coin_types = (5, 10)
+        matches = list(change(coin_types, (5, 10), 3))
+        self.assertEqual(0, len(matches))
 
 class ChangeRecursive(unittest.TestCase):
 
