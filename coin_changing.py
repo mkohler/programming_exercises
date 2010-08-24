@@ -152,12 +152,7 @@ def _change_r(ctypes, avail, price_in_cents, used, coin_index, results):
     if value > price_in_cents or coin_index >= len(ctypes):
         return
 
-    # Take the first type of coin in the array.
-    # For every possible quanity of this coin, call change().
     for n_coins_of_this_type in range(avail[coin_index] + 1):
-        # There has to be a better way. I want an expression that will
-        # add n_coins_of_this_type to the used[coin_index] and return
-        # the modified version of used.
         used_r = used[:]
         used_r[coin_index] = n_coins_of_this_type
         _change_r(ctypes,
