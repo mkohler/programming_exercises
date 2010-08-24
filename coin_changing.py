@@ -183,6 +183,10 @@ def coin_value(coin_types, coin_quantities):
     return sum(itertools.imap(operator.mul, coin_types, coin_quantities))
 
 
+# XXX
+# It would be good to share test cases between change and change_r
+#
+
 class TestCase(unittest.TestCase):
 
     def test_coin_value(self):
@@ -275,6 +279,10 @@ class ChangeRecursive(unittest.TestCase):
         self.assertEqual(2, len(matches))
         self.assert_((5, 1, 0) in matches)
         self.assert_((0, 0, 1) in matches)
+
+    def test_no_nickels(self):
+        coin_types = (1, 10, 25)
+        matches = change_r(coin_types, (5, 1, 1), 30)
 
 
 if __name__ == '__main__':
