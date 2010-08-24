@@ -134,7 +134,7 @@ def change(coin_types, coin_quantities, price):
 def change_r(ctypes, avail, price_in_cents):
 
     if price_in_cents == 0:
-        return []
+        return [(0,)]
     results = []
     _change_r(ctypes, avail, price_in_cents, [0] * len(ctypes), 0, results)
     return results
@@ -182,10 +182,6 @@ def coin_value(coin_types, coin_quantities):
     """
     return sum(itertools.imap(operator.mul, coin_types, coin_quantities))
 
-
-# XXX
-# It would be good to share test cases between change and change_r
-#
 
 class TestCase(unittest.TestCase):
 
@@ -237,87 +233,58 @@ class TestCase(unittest.TestCase):
         answers = how_much_change_do_i_use(types, quantities, price)
         self.assertEqual(None, answers)
 
-class Change(unittest.TestCase):
+
+class TestChange(unittest.TestCase):
     def test_null_case(self):
-        self.assertEqual([(0,)], list(change([1], [1], 0)))
+        input_args = ([1], [5], 0)
+        expected = [(0,)]
 
-    def test_pennies(self):
-        self.assertEqual([(1,)], list(change([1], [5], 1)))
-        self.assertEqual([(2,)], list(change([1], [5], 2)))
-        self.assertEqual([(3,)], list(change([1], [5], 3)))
+        self.assertEqual(expected, list(change(*input_args)))
+        self.assertEqual(expected, list(change_r(*input_args)))
 
-    def test_nickels(self):
-        self.assertEqual([(1,)], list(change([5], [5], 5)))
-        self.assertEqual([(2,)], list(change([5], [5], 10)))
-        self.assertEqual([(3,)], list(change([5], [5], 15)))
+    def test_3_pennies(self):
+        input_args = ([1], [5], 3)
+        expected = [(3,)]
+        self.assertEqual(expected, list(change(*input_args)))
+        self.assertEqual(expected, list(change_r(*input_args)))
+
+    def test_3_nickels(self):
+        input_args = ([5], [5], 15)
+        expected = [(3,)]
+        self.assertEqual(expected, list(change(*input_args)))
+        self.assertEqual(expected, list(change_r(*input_args)))
 
     def test_two_coins_two_solutions(self):
-        self.assertEqual([(1, 1), (6, 0)],
-                         list(change([1, 5], [10, 10], 6)))
+        input_args = ([1, 5], [10, 10], 6)
+        expected = [(1, 1), (6, 0)]
+        self.assertEqual(expected, list(change(*input_args)))
+        self.assertEqual(expected, list(change_r(*input_args)))
 
-    def test_change_out_of_coins(self):
-        self.assertEqual([], list(change([1, 5], [5, 5], 100)))
+    def test_change_not_enough_coins(self):
+        input_args = ([1, 5], [5, 5], 100)
+        expected = []
+        self.assertEqual(expected, list(change(*input_args)))
+        self.assertEqual(expected, list(change_r(*input_args)))
 
     def test_change_three_coins(self):
-        coin_types = (1, 5, 10)
-        matches = list(change(coin_types, (5, 1, 1), 10))
-        self.assertEqual(2, len(matches))
-        self.assert_((5, 1, 0) in matches)
-        self.assert_((0, 0, 1) in matches)
-
-    def test_change(self):
-        coin_types = (1, 5, 10)
-        matches = list(change(coin_types, (5, 1, 1), 10))
-        self.assert_((5, 1, 0) in matches)
-        self.assert_((0, 0, 1) in matches)
-        self.assertEqual(2, len(matches))
+        input_args = ((1, 5, 10), (5, 1, 1), 10)
+        expected1 = (5,1,0)
+        expected2 = (0,0,1)
+        self.assert_(expected1 in list(change(*input_args)))
+        self.assert_(expected2 in list(change_r(*input_args)))
 
     def test_no_nickels(self):
-        coin_types = (1, 10, 25)
-        matches = list(change(coin_types, (5, 5, 5), 30))
-        self.assert_((0, 3, 0) in matches)
-        self.assert_((5, 0, 1) in matches)
+        input_args = ((1, 10, 25), (5, 5, 5), 30)
+        expected1 = (0, 3, 0)
+        expected2 = (5, 0, 1)
+        self.assert_(expected1 in list(change(*input_args)))
+        self.assert_(expected2 in list(change_r(*input_args)))
 
     def test_change_fails(self):
-        coin_types = (5, 10)
-        matches = list(change(coin_types, (5, 10), 3))
-        self.assertEqual(0, len(matches))
-
-class ChangeRecursive(unittest.TestCase):
-
-    def test_null_case(self):
-        self.assertEqual([], change_r(ctypes=[1],
-                                      avail=[1],
-                                      price_in_cents=0))
-
-    def test_pennies(self):
-        self.assertEqual([(1,)], change_r([1], [5], 1))
-        self.assertEqual([(2,)], change_r([1], [5], 2))
-        self.assertEqual([(3,)], change_r([1], [5], 3))
-
-    def test_nickels(self):
-        self.assertEqual([(1,)], change_r([5], [5], 5))
-        self.assertEqual([(2,)], change_r([5], [5], 10))
-        self.assertEqual([(3,)], change_r([5], [5], 15))
-
-    def test_two_coins_two_solutions(self):
-        self.assertEqual([(1, 1), (6, 0)],
-                         change_r([1, 5], [10, 10], 6))
-
-    def test_change_r_out_of_coins(self):
-        self.assertEqual([], change_r([1, 5], [5, 5], 100))
-
-    def test_change_r_three_coins(self):
-        coin_types = (1, 5, 10)
-        matches = change_r(coin_types, (5, 1, 1), 10)
-        self.assertEqual(2, len(matches))
-        self.assert_((5, 1, 0) in matches)
-        self.assert_((0, 0, 1) in matches)
-
-    def test_no_nickels(self):
-        coin_types = (1, 10, 25)
-        matches = change_r(coin_types, (5, 1, 1), 30)
-
+        input_args = ((5, 10), (5, 10), 3)
+        expected = 0
+        self.assertEqual(0, len(list(change(*input_args))))
+        self.assertEqual(0, len(list(change_r(*input_args))))
 
 if __name__ == '__main__':
     sys.exit(main())
